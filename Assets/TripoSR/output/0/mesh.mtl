@@ -1,8 +1,0 @@
-# Generated MTL file
-newmtl MeshMaterial
-Ka 0.2 0.2 0.2
-Kd 0.464514 0.5746399 0.3280837
-Ks 0.5 0.5 0.5
-Ns 50
-d 1.0
-illum 2

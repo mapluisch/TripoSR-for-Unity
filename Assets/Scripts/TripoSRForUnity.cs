@@ -103,10 +103,6 @@ public class TripoSRForUnity : MonoBehaviour
 
     private void OnPythonProcessExited(object sender, EventArgs e)
     {
-        if (modelSaveFormat == "dae") {
-            // TODO obj -> dae conv 
-            // TODO set material to vertex col mat
-        }
         if (autoAddMesh)
         {
             UnityEngine.Debug.Log("Auto adding mesh");
@@ -115,17 +111,12 @@ public class TripoSRForUnity : MonoBehaviour
     }
 
     void AddMeshToScene() {
-        string objPath = Path.Combine(Application.dataPath, "TripoSR/" + outputDir + "0/mesh.obj");
+        string objPath = Path.Combine(Application.dataPath, "TripoSR/" + outputDir + "0/mesh.dae");
         UnityEngine.Debug.Log("From path " + objPath);
 
         GameObject importedObj = AssetDatabase.LoadAssetAtPath<GameObject>(objPath);
         
-        if (importedObj != null)
-        {
-            // Instantiate the object in the scene
-            Instantiate(importedObj);
-            UnityEngine.Debug.Log("OBJ Imported successfully");
-        }
+        if (importedObj != null) Instantiate(importedObj);
         else
         {
             UnityEngine.Debug.LogError("Failed to import OBJ. Check the asset path.");
