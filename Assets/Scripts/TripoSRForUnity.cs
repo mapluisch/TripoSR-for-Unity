@@ -11,7 +11,9 @@ public class TripoSRForUnity : MonoBehaviour
     [SerializeField, Tooltip("Path to your Python executable")]
     private string pythonPath = "/usr/bin/python";
     [SerializeField, Tooltip("If true, automatically adds the generated mesh to the scene.")]
-    private bool autoAddMesh = false;
+    private bool autoAddMesh = true;
+    [SerializeField, Tooltip("If true, automatically rotates the mesh's parent GameObject to negate wrong rotations.")]
+    private bool autoRotate = true;
     [SerializeField, Tooltip("If true, TripoSR's run.py debug output is printed to Unity's console.")]
     private bool showDebugLogs = true;
 
@@ -106,22 +108,32 @@ public class TripoSRForUnity : MonoBehaviour
         if (autoAddMesh)
         {
             UnityEngine.Debug.Log("Auto adding mesh");
-            AddMeshToScene();
+            UnityEditor.EditorApplication.delayCall += AddMeshToScene;
         }
     }
 
-    void AddMeshToScene() {
-        string objPath = Path.Combine(Application.dataPath, "TripoSR/" + outputDir + "0/mesh.dae");
-        UnityEngine.Debug.Log("From path " + objPath);
+    void AddMeshToScene()
+    {
+        string objPath = "Assets/TripoSR/" + outputDir + "0/mesh.obj";
+
+        AssetDatabase.Refresh(); 
+        UnityEngine.Debug.Log("Asset Database refreshed.");
+
+        AssetDatabase.ImportAsset(objPath, ImportAssetOptions.ForceUpdate);
+        UnityEngine.Debug.Log("Asset re-import triggered for path: " + objPath);
 
         GameObject importedObj = AssetDatabase.LoadAssetAtPath<GameObject>(objPath);
-        
-        if (importedObj != null) Instantiate(importedObj);
-        else
+
+        if (importedObj != null)
         {
-            UnityEngine.Debug.LogError("Failed to import OBJ. Check the asset path.");
+            GameObject instantiatedObj = Instantiate(importedObj);
+            instantiatedObj.name = importedObj.name;
+            UnityEngine.Debug.Log("Instantiated GameObject prefab: " + instantiatedObj.name);
+
+            if (autoRotate) instantiatedObj.transform.rotation = Quaternion.Euler(new Vector3(-90f, -90f, 0f));
         }
     }
+
 
     void OnDisable() { if (pythonProcess != null && !pythonProcess.HasExited) pythonProcess.Kill(); }
 }
