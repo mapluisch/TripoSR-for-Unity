@@ -13,7 +13,7 @@ public class TripoSRForUnity : MonoBehaviour
     [SerializeField, Tooltip("If true, automatically adds the generated mesh to the scene.")]
     private bool autoAddMesh = true;
     [SerializeField, Tooltip("If true, automatically rotates the mesh's parent GameObject to negate wrong rotations.")]
-    private bool autoRotate = true;
+    private bool autoFixRotation = true;
     [SerializeField, Tooltip("If true, TripoSR's run.py debug output is printed to Unity's console.")]
     private bool showDebugLogs = true;
 
@@ -130,7 +130,7 @@ public class TripoSRForUnity : MonoBehaviour
             instantiatedObj.name = importedObj.name;
             UnityEngine.Debug.Log("Instantiated GameObject prefab: " + instantiatedObj.name);
 
-            if (autoRotate) instantiatedObj.transform.rotation = Quaternion.Euler(new Vector3(-90f, -90f, 0f));
+            if (autoFixRotation) instantiatedObj.transform.rotation = Quaternion.Euler(new Vector3(-90f, -90f, 0f));
         }
     }
 
