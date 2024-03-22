@@ -1,5 +1,6 @@
 <h1 align="center">TripoSR for Unity</h1>
 <div align="center">
+  <img src="https://github.com/mapluisch/TripoSR-for-Unity/assets/31780571/bef716b7-5a3a-43a7-85b2-35312371d132">
   <p>Seamlessly generate high-quality 3D meshes from 2D images within Unity using <a href="https://github.com/VAST-AI-Research/TripoSR">TripoSR by StabilityAI and TripoAI</a>.</p>
 </div>
 
