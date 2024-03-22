@@ -62,7 +62,7 @@ public class TripoSRForUnity : MonoBehaviour
                       $"--chunk-size {chunkSize} --mc-resolution {marchingCubesResolution} " +
                       $"{(noRemoveBg ? "--no-remove-bg " : "")} " +
                       $"--foreground-ratio {foregroundRatio.ToString(CultureInfo.InvariantCulture)} --output-dir {Path.Combine(Application.dataPath, "TripoSR/" + outputDir)} " +
-                      $"--model-save-format {modelSaveFormat} " +
+                      $"--model-save-format {((modelSaveFormat == "dae") ? "obj" : modelSaveFormat)} " +
                       $"{(render ? "--render" : "")}";
 
         ProcessStartInfo start = new ProcessStartInfo
@@ -103,6 +103,10 @@ public class TripoSRForUnity : MonoBehaviour
 
     private void OnPythonProcessExited(object sender, EventArgs e)
     {
+        if (modelSaveFormat == "dae") {
+            // TODO obj -> dae conv 
+            // TODO set material to vertex col mat
+        }
         if (autoAddMesh)
         {
             UnityEngine.Debug.Log("Auto adding mesh");
