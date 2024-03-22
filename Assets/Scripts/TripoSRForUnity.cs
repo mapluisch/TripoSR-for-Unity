@@ -3,14 +3,17 @@ using System.Diagnostics;
 using UnityEditor;
 using System.IO;
 using System.Globalization;
+using System;
 
 public class TripoSRForUnity : MonoBehaviour
 {
     [Header("General Settings")]
-    [SerializeField, Tooltip("If true, TripoSR's run.py debug output is printed to Unity's console.")]
-    private bool showDebugLogs = true;
     [SerializeField, Tooltip("Path to your Python executable")]
     private string pythonPath = "/usr/bin/python";
+    [SerializeField, Tooltip("If true, automatically adds the generated mesh to the scene.")]
+    private bool autoAddMesh = false;
+    [SerializeField, Tooltip("If true, TripoSR's run.py debug output is printed to Unity's console.")]
+    private bool showDebugLogs = true;
 
     [Header("TripoSR Parameters")]
     [SerializeField, Tooltip("Path to input image(s).")]
@@ -75,6 +78,7 @@ public class TripoSRForUnity : MonoBehaviour
         pythonProcess = new Process {StartInfo = start};
         pythonProcess.StartInfo = start;
         pythonProcess.EnableRaisingEvents = true;
+        pythonProcess.Exited += OnPythonProcessExited;
 
         pythonProcess.OutputDataReceived += (sender, e) => 
         {
@@ -95,6 +99,33 @@ public class TripoSRForUnity : MonoBehaviour
         pythonProcess.Start();
         pythonProcess.BeginOutputReadLine();
         pythonProcess.BeginErrorReadLine();
+    }
+
+    private void OnPythonProcessExited(object sender, EventArgs e)
+    {
+        if (autoAddMesh)
+        {
+            UnityEngine.Debug.Log("Auto adding mesh");
+            AddMeshToScene();
+        }
+    }
+
+    void AddMeshToScene() {
+        string objPath = Path.Combine(Application.dataPath, "TripoSR/" + outputDir + "0/mesh.obj");
+        UnityEngine.Debug.Log("From path " + objPath);
+
+        GameObject importedObj = AssetDatabase.LoadAssetAtPath<GameObject>(objPath);
+        
+        if (importedObj != null)
+        {
+            // Instantiate the object in the scene
+            Instantiate(importedObj);
+            UnityEngine.Debug.Log("OBJ Imported successfully");
+        }
+        else
+        {
+            UnityEngine.Debug.LogError("Failed to import OBJ. Check the asset path.");
+        }
     }
 
     void OnDisable() { if (pythonProcess != null && !pythonProcess.HasExited) pythonProcess.Kill(); }
