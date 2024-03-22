@@ -14,6 +14,10 @@ public class TripoSRForUnity : MonoBehaviour
     private bool autoAddMesh = true;
     [SerializeField, Tooltip("If true, automatically rotates the mesh's parent GameObject to negate wrong rotations.")]
     private bool autoFixRotation = true;
+    [SerializeField, Tooltip("If true, moves and renames the output .obj file (based on the input image's filename)")]
+    private bool moveAndRename = true;
+    [SerializeField, Tooltip("If moveAndRename = true, specifies the relative path to some folder where the output .obj file will be moved to. Important: must begin with Assets/")]
+    private string moveAndRenamePath = "Assets/Models";
     [SerializeField, Tooltip("If true, TripoSR's run.py debug output is printed to Unity's console.")]
     private bool showDebugLogs = true;
 
@@ -105,22 +109,42 @@ public class TripoSRForUnity : MonoBehaviour
 
     private void OnPythonProcessExited(object sender, EventArgs e)
     {
-        if (autoAddMesh)
-        {
-            UnityEngine.Debug.Log("Auto adding mesh");
-            UnityEditor.EditorApplication.delayCall += AddMeshToScene;
-        }
+        if (moveAndRename) UnityEditor.EditorApplication.delayCall += MoveAndRenameOutputFile;
+        else if (autoAddMesh) UnityEditor.EditorApplication.delayCall += () => AddMeshToScene(null);
     }
 
-    void AddMeshToScene()
+    private void MoveAndRenameOutputFile()
     {
-        string objPath = "Assets/TripoSR/" + outputDir + "0/mesh.obj";
+        string originalPath = Path.Combine(Application.dataPath, "TripoSR/" + outputDir + "0/mesh.obj");
+        string modelsDirectory = moveAndRenamePath;
+        string newFileName = Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(images[0])) + ".obj";
+        string newAssetPath = Path.Combine(modelsDirectory, newFileName); // Relative path
+        string newPath = Path.Combine(Application.dataPath, newAssetPath.Substring("Assets/".Length));
 
-        AssetDatabase.Refresh(); 
-        UnityEngine.Debug.Log("Asset Database refreshed.");
 
+        if (!Directory.Exists(modelsDirectory)) Directory.CreateDirectory(modelsDirectory);
+
+        if (File.Exists(originalPath))
+        {
+            if (File.Exists(newPath)) UnityEngine.Debug.LogWarning($"The file '{newPath}' already exists. Please move or rename, then run TripoSR again.");
+            else {
+                File.Move(originalPath, newPath);
+                AssetDatabase.Refresh();
+
+                UnityEngine.Debug.Log($"Moved and renamed mesh to path: {newPath}");
+            }
+
+            if (autoAddMesh) AddMeshToScene(newAssetPath);
+        }
+        else UnityEngine.Debug.Log($"File @ {originalPath} does not exist - cannot move and rename.");
+    }
+
+    private void AddMeshToScene(string path = null)
+    {        
+        string objPath = path ?? "Assets/TripoSR/" + outputDir + "0/mesh.obj";
+
+        AssetDatabase.Refresh();
         AssetDatabase.ImportAsset(objPath, ImportAssetOptions.ForceUpdate);
-        UnityEngine.Debug.Log("Asset re-import triggered for path: " + objPath);
 
         GameObject importedObj = AssetDatabase.LoadAssetAtPath<GameObject>(objPath);
 
@@ -128,10 +152,15 @@ public class TripoSRForUnity : MonoBehaviour
         {
             GameObject instantiatedObj = Instantiate(importedObj);
             instantiatedObj.name = importedObj.name;
+
             UnityEngine.Debug.Log("Instantiated GameObject prefab: " + instantiatedObj.name);
 
-            if (autoFixRotation) instantiatedObj.transform.rotation = Quaternion.Euler(new Vector3(-90f, -90f, 0f));
+            if (autoFixRotation)
+            {
+                instantiatedObj.transform.rotation = Quaternion.Euler(new Vector3(-90f, -90f, 0f));
+            }
         }
+        else UnityEngine.Debug.LogError("Failed to load the mesh at path: " + objPath);
     }
 
 
