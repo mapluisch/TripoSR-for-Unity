@@ -2,10 +2,17 @@ using UnityEngine;
 using System.Diagnostics;
 using UnityEditor;
 using System.IO;
+using System.Globalization;
 
 public class TripoSRForUnity : MonoBehaviour
 {
-    [Header("Python Script Parameters")]
+    [Header("General Settings")]
+    [SerializeField, Tooltip("If true, TripoSR's run.py debug output is printed to Unity's console.")]
+    private bool showDebugLogs = true;
+    [SerializeField, Tooltip("Path to your Python executable")]
+    private string pythonPath = "/usr/bin/python";
+
+    [Header("TripoSR Parameters")]
     [SerializeField, Tooltip("Path to input image(s).")]
     private Texture2D[] images;
 
@@ -36,9 +43,10 @@ public class TripoSRForUnity : MonoBehaviour
     [SerializeField, Tooltip("If true, saves a rendered video. Default: false")]
     private bool render = false;
 
+    private Process pythonProcess;
+
     public void RunTripoSR()
     {
-
         string[] imagePaths = new string[images.Length];
         for (int i = 0; i < images.Length; i++)
         {
@@ -49,27 +57,45 @@ public class TripoSRForUnity : MonoBehaviour
         string args = $"\"{string.Join("\" \"", imagePaths)}\" --device {device} " +
                       $"--pretrained-model-name-or-path {pretrainedModelNameOrPath} " +
                       $"--chunk-size {chunkSize} --mc-resolution {marchingCubesResolution} " +
-                      $"{(noRemoveBg ? "--no-remove-bg " : "")}" +
-                      $"--foreground-ratio {foregroundRatio} --output-dir {outputDir} " +
+                      $"{(noRemoveBg ? "--no-remove-bg " : "")} " +
+                      $"--foreground-ratio {foregroundRatio.ToString(CultureInfo.InvariantCulture)} --output-dir {Path.Combine(Application.dataPath, "TripoSR/" + outputDir)} " +
                       $"--model-save-format {modelSaveFormat} " +
                       $"{(render ? "--render" : "")}";
 
         ProcessStartInfo start = new ProcessStartInfo
         {
-            FileName = "python",
-            Arguments = $"\"Assets/TripoSR/run.py\" {args}",
+            FileName = pythonPath,
+            Arguments = $"{Path.Combine(Application.dataPath, "TripoSR/run.py")} {args}",
             UseShellExecute = false,
             RedirectStandardOutput = true,
+            RedirectStandardError = true,
             CreateNoWindow = true
         };
 
-        using (Process process = Process.Start(start))
+        pythonProcess = new Process {StartInfo = start};
+        pythonProcess.StartInfo = start;
+        pythonProcess.EnableRaisingEvents = true;
+
+        pythonProcess.OutputDataReceived += (sender, e) => 
         {
-            using (StreamReader reader = process.StandardOutput)
+            if (showDebugLogs && !string.IsNullOrEmpty(e.Data))
             {
-                string result = reader.ReadToEnd();
-                UnityEngine.Debug.Log(result);
+                UnityEngine.Debug.Log(e.Data);
             }
-        }
+        };
+
+        pythonProcess.ErrorDataReceived += (sender, e) => 
+        {
+            if (showDebugLogs && !string.IsNullOrEmpty(e.Data))
+            {
+                UnityEngine.Debug.Log(e.Data);
+            }
+        };
+
+        pythonProcess.Start();
+        pythonProcess.BeginOutputReadLine();
+        pythonProcess.BeginErrorReadLine();
     }
+
+    void OnDisable() { if (pythonProcess != null && !pythonProcess.HasExited) pythonProcess.Kill(); }
 }

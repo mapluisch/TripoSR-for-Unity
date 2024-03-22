@@ -152,6 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 017d21c0f4b3ae432a2c87dcc41f49a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showDebugLogs: 1
+  pythonPath: /home/martin/anaconda3/bin/python
   images:
   - {fileID: 2800000, guid: 96bbb7f4b6240c646b832a297693072b, type: 3}
   device: cuda:0
