@@ -1,7 +1,7 @@
 <h1 align="center">TripoSR for Unity</h1>
 <div align="center">
   <img src="https://github.com/mapluisch/TripoSR-for-Unity/assets/31780571/4df6c785-8163-43e5-9c32-4b3ac7809ca8" style="width:90%">
-  <p><em>Seamlessly generate high-quality 3D meshes from 2D images and retexture them directly in Unity</em>.</p>
+  <p><em>Seamlessly generate high-quality 3D meshes from 2D images and retexture them using text-based texture generation directly in Unity</em>.</p>
 </div>
 
 ## Overview
@@ -9,7 +9,7 @@ This project integrates [TripoSR](https://github.com/VAST-AI-Research/TripoSR), 
 
 ### Features
 - Transformation of 2D images into textured 3D meshes, available both in Editor and in Playmode.
-- Text-based retexturing, which is great for quick game asset creation or rapid prototyping.
+- Text-based texture generation, which is great for quick game asset creation or rapid prototyping.
 
 The generated 3D meshes are imported using a modified vertex color importer (based on [Andrew Raphael Lukasik's importer](https://gist.github.com/andrew-raphael-lukasik/3559728d022a4c96f491924f8285e1bf)) and auto-assigned to a base Material with custom shader to utilize and display the vertex colors correctly (without surface normals, though).
 
