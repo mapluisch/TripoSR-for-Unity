@@ -1,13 +1,15 @@
 <h1 align="center">TripoSR for Unity</h1>
 <div align="center">
   <img src="https://github.com/mapluisch/TripoSR-for-Unity/assets/31780571/d305cb7f-4d4c-4e78-a8b4-19b25048d77b">
-  <p><em>Seamlessly generate high-quality 3D meshes from 2D images within Unity using <a href="https://github.com/VAST-AI-Research/TripoSR">TripoSR</a></em>.</p>
+  <p><em>Seamlessly generate high-quality 3D meshes from 2D images and retexture them directly in Unity</em>.</p>
 </div>
 
 ## Overview
-This project integrates TripoSR, a "a state-of-the-art open-source model for fast feedforward 3D reconstruction from a single image" by StabilityAI and TripoAI, directly into the Unity Editor. 
+This project integrates [TripoSR](https://github.com/VAST-AI-Research/TripoSR), a "a state-of-the-art open-source model for fast feedforward 3D reconstruction from a single image" by StabilityAI and TripoAI, and [triposr-texture-gen](https://github.com/ejones/triposr-texture-gen) directly into Unity Editor. 
 
-Thus, this project enables the transformation of 2D images into textured 3D meshes within Unity (both in Editor and in Playmode), useful for various applications such as game asset creation or rapid prototyping. 
+### Features
+- Transformation of 2D images into textured 3D meshes, available both in Editor and in Playmode.
+- Text-based retexturing, which is great for quick game asset creation or rapid prototyping.
 
 The generated 3D meshes are imported using a modified vertex color importer (based on [Andrew Raphael Lukasik's importer](https://gist.github.com/andrew-raphael-lukasik/3559728d022a4c96f491924f8285e1bf)) and auto-assigned to a base Material with custom shader to utilize and display the vertex colors correctly (without surface normals, though).
 
@@ -20,12 +22,16 @@ The generated meshes are colored (vertex colors), react to light, and (optionall
 
 https://github.com/mapluisch/TripoSR-for-Unity/assets/31780571/f27f62e0-00e3-4c14-8458-97302a82e76d
 
+This clip shows the text-based retexturing of a TripoSR-generated 3D mesh:
+
+https://github.com/mapluisch/TripoSR-for-Unity/assets/31780571/3e2fbb54-6828-49f0-80da-310bcedfc4c9
+
 This demo clip shows 3D mesh generation in Playmode: 
 
 https://github.com/mapluisch/TripoSR-for-Unity/assets/31780571/d6b85653-a672-495f-b268-f4996075a4c1
 
 
-## Setup
+## Setup - TripoSR
 
 ### Integrating the .unitypackage into your project
 0. Download the latest release `.unitypackage` and import it into your project (`Assets > Import Package`).
@@ -43,8 +49,29 @@ https://github.com/mapluisch/TripoSR-for-Unity/assets/31780571/d6b85653-a672-495
 3. In Unity, add the `TripoSR` Prefab to the scene (or simply open up my `SampleScene`).
 4. Configure the path to your python executable in the `TripoSR` GameObject within your scene: For Windows, run `where python` within Command Prompt. For Unix, run `which python` within Terminal.
 5. Configure the other public variables in the Inspector as needed.
+
+## Setup - TextureGenerator
+I've adapted the `text2texture.py` script from [triposr-texture-gen](https://github.com/ejones/triposr-texture-gen), so it doesn't open up the 3D viewer and works in-situ. When you clone the repo on your own, this won't be included.
+
+### When using the .unitypackage in your project
+0. Follow the general setup for TripoSR from above
+1. `cd` into the `Assets` folder and clone the latest [triposr-texture-gen](https://github.com/ejones/triposr-texture-gen).
+2. Run `pip install -r -requirements.txt` from within the `Assets/triposr-texture-gen` directory.
+3. Run `pip install huggingface-hub --upgrade` to fix some compatibility problems.
+4. Add the `TextureGenerator` Prefab to your scene.
+5. Configure the path to your python executable.
+6. Configure the public vars to your liking.
+
+### When using this repo's Unity project
+0. Follow the general setup from above
+1. Run `pip install -r -requirements.txt` from within the `Assets/triposr-texture-gen` directory.
+2. Run `pip install huggingface-hub --upgrade` to fix some compatibility problems.
+3. Add the `TextureGenerator` Prefab to your scene (or use my `SampleScene`).
+4. Configure the path to your python executable.
+5. Configure the public vars to your liking.
+
    
-## Usage
+## Usage - TripoSR
 Once you have set up your scene with the `TripoSRForUnity` component and configured the parameters, you can run the process by clicking the `Run TripoSR` button in the inspector.
 
 When you run TripoSR for the first time, the model weights will be downloaded and cached - this only occurs once; subsequent runs use the cached model.
@@ -61,6 +88,13 @@ When you run TripoSR for the first time, the model weights will be downloaded an
 All TripoSR parameters are exposed by my script. Feel free to change them as you see fit.
 
 I've made some of them `ReadOnly` within the Inspector, since you shouldn't really change those vars (e.g. model name, device to use). You can still change them within the script of course.
+
+## Usage - TextureGenerator
+Likewise, you can run the texture generator by clicking on `Generate Textured Object` within the `TextureGenerator`-component in the inspector.
+
+When you run the texture generator for the first time, model weights will also be downloaded and cached, which also only occurs the first time.
+
+Set the model file in the inspector to your `.obj` from `Assets > Models`, describe the design you would like as model description, and start the generator.
 
 ## Known Issues
 TripoSR `.obj`s only consist of `v`s and `f`s, surface normals are not calculated. When Unity calculates the normals upon import, they are not smoothed correctly (even when using high smoothing angles).
@@ -83,4 +117,6 @@ Please cite their work adequately in case you use it in your own publications:
   year={2024}
 }
 ```
+
+Also special thanks to @ejones for [triposr-texture-gen](https://github.com/ejones/triposr-texture-gen).
 
