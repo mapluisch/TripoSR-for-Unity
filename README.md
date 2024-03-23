@@ -9,7 +9,7 @@ This project integrates TripoSR, a "a state-of-the-art open-source model for fas
 
 Thus, this project enables the transformation of 2D images into textured 3D meshes within Unity (both in Editor and in Playmode), useful for various applications such as game asset creation or rapid prototyping. 
 
-The generated 3D meshes are imported using a modified vertex color importer (based on [Andrew Raphael Lukasik's importer](https://gist.github.com/andrew-raphael-lukasik/3559728d022a4c96f491924f8285e1bf)) and auto-assigned to a base Material with custom shader to utilize and display the vertex colors correctly with normal lighting.
+The generated 3D meshes are imported using a modified vertex color importer (based on [Andrew Raphael Lukasik's importer](https://gist.github.com/andrew-raphael-lukasik/3559728d022a4c96f491924f8285e1bf)) and auto-assigned to a base Material with custom shader to utilize and display the vertex colors correctly (without surface normals, though).
 
 Tested with Unity 2022.3.22f1 running on Windows 11 and Ubuntu 22.04.
 
@@ -26,10 +26,22 @@ https://github.com/mapluisch/TripoSR-for-Unity/assets/31780571/d6b85653-a672-495
 
 
 ## Setup
+
+### Integrating the .unitypackage into your project
+0. Download the latest release `.unitypackage` and import it into your project (`Assets > Import Package`).
+1. `cd` into the `Assets` folder of your Unity project (using Command Prompt, Terminal, ...) and clone the latest repo of TripoSR: `git clone https://github.com/VAST-AI-Research/TripoSR.git`.
+2. After cloning TripoSR, `cd` into the TripoSR folder that you just created by cloning the repo.
+3. Run `pip install --upgrade setuptools`, `pip install torch` (in case you don't have PyTorch installed) and `pip install -r requirements.txt`.
+3. Add the `TripoSR` Prefab (found in `Assets > Prefabs`) to your scene.
+4. Configure the path to your python executable in the `TripoSR` GameObject within your scene: For Windows, run `where python` within Command Prompt. For Unix, run `which python` within Terminal.
+5. Configure the other public variables in the Inspector as needed.
+
+### Using this repo's Unity project
+0. Clone this repo.
 1. Ensure you have Python installed on your system.
 2. Run `pip install --upgrade setuptools`, `pip install torch` (in case you don't have PyTorch installed) and `pip install -r requirements.txt` from within this project's `Assets/TripoSR` folder.
-3. In Unity, create a GameObject and attach the `TripoSRForUnity` script (or simply open up my `SampleScene`).
-4. Configure the path to your python executable: For Windows, run `where python` within Command Prompt. For Unix, run `which python` within Terminal.
+3. In Unity, add the `TripoSR` Prefab to the scene (or simply open up my `SampleScene`).
+4. Configure the path to your python executable in the `TripoSR` GameObject within your scene: For Windows, run `where python` within Command Prompt. For Unix, run `which python` within Terminal.
 5. Configure the other public variables in the Inspector as needed.
    
 ## Usage
@@ -50,8 +62,10 @@ All TripoSR parameters are exposed by my script. Feel free to change them as you
 
 I've made some of them `ReadOnly` within the Inspector, since you shouldn't really change those vars (e.g. model name, device to use). You can still change them within the script of course.
 
-## Contributions
-Contributions are welcome. Feel free to open issues for bugs/features (related to my Unity integration) or submit PRs.
+## Known Issues
+TripoSR `.obj`s only consist of `v`s and `f`s, surface normals are not calculated. When Unity calculates the normals upon import, they are not smoothed correctly (even when using high smoothing angles).
+
+For now, I've disabled normal calculation - feel free to create a PR if you know how to correctly handle this issue.
 
 ## License
 This project is licensed under the MIT License. See `LICENSE` for more information.

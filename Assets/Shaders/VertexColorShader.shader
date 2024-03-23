@@ -1,4 +1,4 @@
-Shader "Custom/VertexColorWithNormals" {
+Shader "Custom/VertexColorShader" {
     Properties {
         _MainTex ("Texture", 2D) = "white" {}
     }
