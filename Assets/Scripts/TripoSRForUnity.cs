@@ -53,9 +53,18 @@ public class TripoSRForUnity : MonoBehaviour
     private bool render = false;
 
     private Process pythonProcess;
+    private bool isProcessRunning = false;
+
+    public static event Action OnPythonProcessEnded;
 
     public void RunTripoSR()
     {
+        if (isProcessRunning)
+        {
+            UnityEngine.Debug.Log("A TripoSR process is already running - please wait.");
+            return;
+        }
+        
         string[] imagePaths = new string[images.Length];
         for (int i = 0; i < images.Length; i++)
         {
@@ -105,12 +114,18 @@ public class TripoSRForUnity : MonoBehaviour
         pythonProcess.Start();
         pythonProcess.BeginOutputReadLine();
         pythonProcess.BeginErrorReadLine();
+        isProcessRunning = true;
     }
 
     private void OnPythonProcessExited(object sender, EventArgs e)
     {
+        isProcessRunning = false;
+        pythonProcess = null;
+        
         if (moveAndRename) UnityEditor.EditorApplication.delayCall += MoveAndRenameOutputFile;
         else if (autoAddMesh) UnityEditor.EditorApplication.delayCall += () => AddMeshToScene(null);
+
+        UnityEditor.EditorApplication.delayCall += () => OnPythonProcessEnded?.Invoke();
     }
 
     private void MoveAndRenameOutputFile()

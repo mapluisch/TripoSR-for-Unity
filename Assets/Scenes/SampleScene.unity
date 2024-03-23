@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 017d21c0f4b3ae432a2c87dcc41f49a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pythonPath: /home/martin/anaconda3/bin/python
+  pythonPath: C:\Python311\python.exe
   autoAddMesh: 1
   autoFixRotation: 1
   moveAndRename: 1
