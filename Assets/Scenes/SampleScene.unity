@@ -152,17 +152,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 017d21c0f4b3ae432a2c87dcc41f49a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pythonPath: C:\Python311\python.exe
+  pythonPath: /home/martin/anaconda3/bin/python
   autoAddMesh: 1
+  autoAddPhysicsComponents: 1
   autoFixRotation: 1
   moveAndRename: 1
   moveAndRenamePath: Models
   showDebugLogs: 1
   images:
-  - {fileID: 2800000, guid: 58e29ea2a802573de98a601361a75295, type: 3}
+  - {fileID: 2800000, guid: a31691d6a3e934626a9c7803452e0438, type: 3}
   device: cuda:0
   pretrainedModelNameOrPath: stabilityai/TripoSR
-  chunkSize: 8192
+  chunkSize: 8196
   marchingCubesResolution: 256
   noRemoveBg: 0
   foregroundRatio: 0.85

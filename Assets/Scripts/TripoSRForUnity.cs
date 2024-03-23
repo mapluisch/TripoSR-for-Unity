@@ -13,6 +13,9 @@ public class TripoSRForUnity : MonoBehaviour
     
     [SerializeField, Tooltip("If true, automatically adds the generated mesh to the scene.")]
     private bool autoAddMesh = true;
+
+    [SerializeField, Tooltip("If true, automatically adds MeshCollider & RigidBody.")]
+    private bool autoAddPhysicsComponents = true;
     
     [SerializeField, Tooltip("If true, automatically rotates the mesh's parent GameObject to negate wrong rotations.")]
     private bool autoFixRotation = true;
@@ -183,9 +186,14 @@ public class TripoSRForUnity : MonoBehaviour
 
             UnityEngine.Debug.Log("Instantiated GameObject prefab: " + instantiatedObj.name);
 
-            if (autoFixRotation)
+            if (autoFixRotation) instantiatedObj.transform.GetChild(0).rotation = Quaternion.Euler(new Vector3(-90f, -90f, 0f));
+
+            if (autoAddPhysicsComponents) 
             {
-                instantiatedObj.transform.GetChild(0).rotation = Quaternion.Euler(new Vector3(-90f, -90f, 0f));
+                GameObject meshObj = instantiatedObj.transform.GetChild(0).gameObject;
+                MeshCollider mc = meshObj.AddComponent<MeshCollider>();
+                mc.convex = true;
+                meshObj.AddComponent<Rigidbody>();
             }
         }
         else UnityEngine.Debug.LogError("Failed to load the mesh at path: " + objPath);
