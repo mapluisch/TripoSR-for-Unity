@@ -10,14 +10,19 @@ public class TripoSRForUnity : MonoBehaviour
     [Header("General Settings")]
     [SerializeField, Tooltip("Path to your Python executable")]
     private string pythonPath = "/usr/bin/python";
+    
     [SerializeField, Tooltip("If true, automatically adds the generated mesh to the scene.")]
     private bool autoAddMesh = true;
+    
     [SerializeField, Tooltip("If true, automatically rotates the mesh's parent GameObject to negate wrong rotations.")]
     private bool autoFixRotation = true;
+    
     [SerializeField, Tooltip("If true, moves and renames the output .obj file (based on the input image's filename)")]
     private bool moveAndRename = true;
+    
     [SerializeField, Tooltip("If moveAndRename = true, specifies the relative path to some folder where the output .obj file will be moved to. Important: must begin with Assets/")]
     private string moveAndRenamePath = "Assets/Models";
+    
     [SerializeField, Tooltip("If true, TripoSR's run.py debug output is printed to Unity's console.")]
     private bool showDebugLogs = true;
 
@@ -61,8 +66,16 @@ public class TripoSRForUnity : MonoBehaviour
     {
         if (isProcessRunning)
         {
-            UnityEngine.Debug.Log("A TripoSR process is already running - please wait.");
-            return;
+            UnityEngine.Debug.Log("A TripoSR process is already running - quitting and replacing process.");
+
+            if (pythonProcess is { HasExited: false })
+            {
+                pythonProcess.Kill();
+                pythonProcess.Dispose();
+            }
+
+            pythonProcess = null;
+            isProcessRunning = false;
         }
         
         string[] imagePaths = new string[images.Length];
