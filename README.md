@@ -43,6 +43,8 @@ When you run TripoSR for the first time, the model weights will be downloaded an
 ### TripoSR Parameters
 All TripoSR parameters are exposed by my script. Feel free to change them as you see fit.
 
+I've made some of them `ReadOnly` within the Inspector, since you shouldn't really change those vars (e.g. model name, device to use). You can still change them within the script of course.
+
 ## Contributions
 Contributions are welcome! Feel free to open issues for bugs/features or submit pull requests.
 
