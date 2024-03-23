@@ -14,9 +14,11 @@ The generated 3D meshes are imported using a modified vertex color importer (bas
 Tested with Unity 2022.3.22f1 running on Windows 11 and Ubuntu 22.04.
 
 ## Demo
-This demo clip shows the creation of a 3D mesh based on a 2D Texture in realtime:
+This demo clip shows the creation of a 3D mesh based on a 2D Texture in realtime. 
 
-https://github.com/mapluisch/TripoSR-for-Unity/assets/31780571/ab54b1f7-1bd3-4a11-9b79-68757d6dc47e
+The generated meshes are colored (vertex colors), react to light, and (optionally) automatically use `MeshCollider` and `Rigidbody` for physics interaction.
+
+https://github.com/mapluisch/TripoSR-for-Unity/assets/31780571/f27f62e0-00e3-4c14-8458-97302a82e76d
 
 ## Setup
 1. Ensure you have Python installed on your system.
@@ -32,6 +34,7 @@ When you run TripoSR for the first time, the model weights will be downloaded an
 
 ### General Settings
 - `autoAddMesh`: When enabled, the generated mesh is automatically added to the Unity scene as GameObject.
+- `autoAddPhysicsComponents`: Whether or not to automatically add physics components (i.e., convex `MeshCollider` and `Rigidbody`) to the generated mesh.
 - `autoFixRotation`: If enabled, will automatically correct the wrong object rotation after adding the mesh to the scene.
 - `moveAndRename`: Moves and renames the output `.obj` file based on the input image's filename if enabled.
 - `moveAndRenamePath`: The directory to which the `.obj` file will be moved. Must start with `Assets/`.
