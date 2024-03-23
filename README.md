@@ -9,7 +9,7 @@ This project integrates [TripoSR](https://github.com/VAST-AI-Research/TripoSR), 
 
 ### Features
 - Transformation of 2D images into textured 3D meshes, available both in Editor and in Playmode.
-- Text-based texture generation, which is great for quick game asset creation or rapid prototyping.
+- Text-based texture generation, applied directly to the generated 3D meshes.
 
 The generated 3D meshes are imported using a modified vertex color importer (based on [Andrew Raphael Lukasik's importer](https://gist.github.com/andrew-raphael-lukasik/3559728d022a4c96f491924f8285e1bf)) and auto-assigned to a base Material with custom shader to utilize and display the vertex colors correctly (without surface normals, though).
 
