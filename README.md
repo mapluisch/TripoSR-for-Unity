@@ -7,7 +7,7 @@
 ## Overview
 This project integrates TripoSR, a "a state-of-the-art open-source model for fast feedforward 3D reconstruction from a single image" by StabilityAI and TripoAI, directly into the Unity Editor. 
 
-Thus, this project enables the transformation of 2D images into textured 3D meshes within Unity (both in Editor and during Runtime), useful for various applications such as game asset creation or rapid prototyping. 
+Thus, this project enables the transformation of 2D images into textured 3D meshes within Unity (both in Editor and in Playmode), useful for various applications such as game asset creation or rapid prototyping. 
 
 The generated 3D meshes are imported using a modified vertex color importer (based on [Andrew Raphael Lukasik's importer](https://gist.github.com/andrew-raphael-lukasik/3559728d022a4c96f491924f8285e1bf)) and auto-assigned to a base Material with custom shader to utilize and display the vertex colors correctly with normal lighting.
 
