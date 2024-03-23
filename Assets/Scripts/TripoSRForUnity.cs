@@ -20,7 +20,7 @@ public class TripoSRForUnity : MonoBehaviour
     [SerializeField, Tooltip("If true, automatically rotates the mesh's parent GameObject to negate wrong rotations.")]
     private bool autoFixRotation = true;
     
-    [SerializeField, Tooltip("If true, moves and renames the output .obj file (based on the input image's filename)")]
+    [ReadOnly, SerializeField, Tooltip("If true, moves and renames the output .obj file (based on the input image's filename)")]
     private bool moveAndRename = true;
     
     [SerializeField, Tooltip("If moveAndRename = true, specifies the relative path to some folder where the output .obj file will be moved to.")]
