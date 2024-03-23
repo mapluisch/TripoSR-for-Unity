@@ -1,7 +1,7 @@
 <h1 align="center">TripoSR for Unity</h1>
 <div align="center">
   <img src="https://github.com/mapluisch/TripoSR-for-Unity/assets/31780571/bef716b7-5a3a-43a7-85b2-35312371d132">
-  <p>Seamlessly generate high-quality 3D meshes from 2D images within Unity using <a href="https://github.com/VAST-AI-Research/TripoSR">TripoSR by StabilityAI and TripoAI</a>.</p>
+  <p>Seamlessly generate high-quality 3D meshes from 2D images within Unity using <a href="https://github.com/VAST-AI-Research/TripoSR">TripoSR</a>.</p>
 </div>
 
 ## Overview
@@ -35,7 +35,7 @@ https://github.com/mapluisch/TripoSR-for-Unity/assets/31780571/d6b85653-a672-495
 ## Usage
 Once you have set up your scene with the `TripoSRForUnity` component and configured the parameters, you can run the process by clicking the `Run TripoSR` button in the inspector.
 
-When you run TripoSR for the first time, the model weights will be downloaded and cached - this only occurs once.
+When you run TripoSR for the first time, the model weights will be downloaded and cached - this only occurs once; subsequent runs use the cached model.
 
 ### General Settings
 - `autoAddMesh`: When enabled, the generated mesh is automatically added to the Unity scene as GameObject.
@@ -51,15 +51,15 @@ All TripoSR parameters are exposed by my script. Feel free to change them as you
 I've made some of them `ReadOnly` within the Inspector, since you shouldn't really change those vars (e.g. model name, device to use). You can still change them within the script of course.
 
 ## Contributions
-Contributions are welcome! Feel free to open issues for bugs/features or submit pull requests.
+Contributions are welcome. Feel free to open issues for bugs/features (related to my Unity integration) or submit PRs.
 
 ## License
 This project is licensed under the MIT License. See `LICENSE` for more information.
 
 ## Acknowledgments
-Special thanks to Stability AI and contributors of the TripoSR project. 
+Special thanks to StabilityAI, TripoAI, and contributors of the TripoSR project. 
 
-Please cite their work adequately in case you use it in your own projects:
+Please cite their work adequately in case you use it in your own publications:
 
 ```BibTeX
 @article{TripoSR2024,
