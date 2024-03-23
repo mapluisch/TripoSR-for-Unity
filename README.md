@@ -14,11 +14,16 @@ The generated 3D meshes are imported using a modified vertex color importer (bas
 Tested with Unity 2022.3.22f1 running on Windows 11 and Ubuntu 22.04.
 
 ## Demo
-This demo clip shows the creation of a 3D mesh based on a 2D Texture in realtime. 
+The first demo clip shows the creation of a 3D mesh based on a 2D Texture within the Editor.
 
 The generated meshes are colored (vertex colors), react to light, and (optionally) automatically use `MeshCollider` and `Rigidbody` for physics interaction.
 
 https://github.com/mapluisch/TripoSR-for-Unity/assets/31780571/f27f62e0-00e3-4c14-8458-97302a82e76d
+
+This demo clip shows 3D mesh generation in Playmode: 
+
+https://github.com/mapluisch/TripoSR-for-Unity/assets/31780571/d6b85653-a672-495f-b268-f4996075a4c1
+
 
 ## Setup
 1. Ensure you have Python installed on your system.
