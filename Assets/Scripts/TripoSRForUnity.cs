@@ -20,20 +20,20 @@ public class TripoSRForUnity : MonoBehaviour
     [SerializeField, Tooltip("If true, moves and renames the output .obj file (based on the input image's filename)")]
     private bool moveAndRename = true;
     
-    [SerializeField, Tooltip("If moveAndRename = true, specifies the relative path to some folder where the output .obj file will be moved to. Important: must begin with Assets/")]
-    private string moveAndRenamePath = "Assets/Models";
+    [SerializeField, Tooltip("If moveAndRename = true, specifies the relative path to some folder where the output .obj file will be moved to.")]
+    private string moveAndRenamePath = "Models";
     
     [SerializeField, Tooltip("If true, TripoSR's run.py debug output is printed to Unity's console.")]
     private bool showDebugLogs = true;
 
-    [Header("TripoSR Parameters")]
     [SerializeField, Tooltip("Path to input image(s).")]
     private Texture2D[] images;
-
-    [SerializeField, Tooltip("Device to use. Default: 'cuda:0'")]
+    
+    [Header("TripoSR Parameters")]
+    [ReadOnly, SerializeField, Tooltip("Device to use. Default: 'cuda:0'")]
     private string device = "cuda:0";
 
-    [SerializeField, Tooltip("Path to the pretrained model. Default: 'stabilityai/TripoSR'")]
+    [ReadOnly, SerializeField, Tooltip("Path to the pretrained model. Default: 'stabilityai/TripoSR'")]
     private string pretrainedModelNameOrPath = "stabilityai/TripoSR";
 
     [SerializeField, Tooltip("Evaluation chunk size. Default: 8192")]
@@ -48,13 +48,13 @@ public class TripoSRForUnity : MonoBehaviour
     [SerializeField, Tooltip("Foreground to image size ratio. Default: 0.85")]
     private float foregroundRatio = 0.85f;
 
-    [SerializeField, Tooltip("Output directory. Default: 'output/'")]
+    [ReadOnly, SerializeField, Tooltip("Output directory. Default: 'output/'")]
     private string outputDir = "output/";
 
-    [SerializeField, Tooltip("Mesh save format. Default: 'obj'")]
+    [ReadOnly, SerializeField, Tooltip("Mesh save format. Default: 'obj'")]
     private string modelSaveFormat = "obj";
 
-    [SerializeField, Tooltip("If true, saves a rendered video. Default: false")]
+    [ReadOnly, SerializeField, Tooltip("If true, saves a rendered video. Default: false")]
     private bool render = false;
 
     private Process pythonProcess;
@@ -144,9 +144,9 @@ public class TripoSRForUnity : MonoBehaviour
     private void MoveAndRenameOutputFile()
     {
         string originalPath = Path.Combine(Application.dataPath, "TripoSR/" + outputDir + "0/mesh.obj");
-        string modelsDirectory = moveAndRenamePath;
+        string modelsDirectory = "Assets/"+moveAndRenamePath;
         string newFileName = Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(images[0])) + ".obj";
-        string newAssetPath = Path.Combine(modelsDirectory, newFileName); // Relative path
+        string newAssetPath = Path.Combine(modelsDirectory, newFileName);
         string newPath = Path.Combine(Application.dataPath, newAssetPath.Substring("Assets/".Length));
 
 
@@ -185,7 +185,7 @@ public class TripoSRForUnity : MonoBehaviour
 
             if (autoFixRotation)
             {
-                instantiatedObj.transform.rotation = Quaternion.Euler(new Vector3(-90f, -90f, 0f));
+                instantiatedObj.transform.GetChild(0).rotation = Quaternion.Euler(new Vector3(-90f, -90f, 0f));
             }
         }
         else UnityEngine.Debug.LogError("Failed to load the mesh at path: " + objPath);

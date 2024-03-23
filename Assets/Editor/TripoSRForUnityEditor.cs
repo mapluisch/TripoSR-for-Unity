@@ -9,6 +9,7 @@ public class TripoSRForUnityEditor : Editor
     private float colorLerpDuration = 1.5f;
     private Color lightBlue = new Color(124/255f, 144/255f, 219/255f, 1f);
     private Color darkBlue = new Color(80/255f, 100/255f, 170/255f, 1f);
+    private int imagePreviewSize = 256;
 
     void OnEnable() => TripoSRForUnity.OnPythonProcessEnded += OnProcessEnded;
 
@@ -28,13 +29,49 @@ public class TripoSRForUnityEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        DrawDefaultInspector();
+        TripoSRForUnity tripoInstance = (TripoSRForUnity)target;
+        
+        DrawPropertiesExcluding(serializedObject, "images");
+        
+        EditorGUILayout.LabelField("Images", EditorStyles.boldLabel);
+        SerializedProperty imagesProperty = serializedObject.FindProperty("images");
+        int newSize = Mathf.Max(0, EditorGUILayout.IntField("Size", imagesProperty.arraySize));
+        if (newSize != imagesProperty.arraySize)
+        {
+            imagesProperty.arraySize = newSize;
+        }
+
+        EditorGUI.indentLevel++;
+        for (int i = 0; i < imagesProperty.arraySize; i++)
+        {
+            SerializedProperty imageProp = imagesProperty.GetArrayElementAtIndex(i);
+            EditorGUILayout.BeginVertical();
+            EditorGUILayout.PrefixLabel("Image " + i);
+            if (imageProp.objectReferenceValue != null)
+            {
+                EditorGUILayout.BeginVertical();
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.FlexibleSpace();
+                Rect textureRect = GUILayoutUtility.GetRect(imagePreviewSize, imagePreviewSize, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(false));
+                EditorGUI.DrawPreviewTexture(textureRect, (Texture)imageProp.objectReferenceValue, null, ScaleMode.ScaleToFit);
+                GUILayout.FlexibleSpace();
+                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.EndVertical();
+            }
+
+            imageProp.objectReferenceValue = EditorGUILayout.ObjectField(imageProp.objectReferenceValue, typeof(Texture2D), allowSceneObjects: false);
+
+            EditorGUILayout.EndVertical();
+        }
+        EditorGUI.indentLevel--;
+
+        serializedObject.ApplyModifiedProperties();
 
         EditorGUILayout.Space();
         GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
         EditorGUILayout.Space();
 
-        TripoSRForUnity tripoInstance = (TripoSRForUnity)target;
+
         GUIStyle bigButtonStyle = new GUIStyle(GUI.skin.button)
         {
             fontSize = 14,

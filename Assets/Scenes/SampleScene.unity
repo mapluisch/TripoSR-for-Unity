@@ -156,10 +156,10 @@ MonoBehaviour:
   autoAddMesh: 1
   autoFixRotation: 1
   moveAndRename: 1
-  moveAndRenamePath: Assets/Models
+  moveAndRenamePath: Models
   showDebugLogs: 1
   images:
-  - {fileID: 2800000, guid: 96bbb7f4b6240c646b832a297693072b, type: 3}
+  - {fileID: 2800000, guid: 58e29ea2a802573de98a601361a75295, type: 3}
   device: cuda:0
   pretrainedModelNameOrPath: stabilityai/TripoSR
   chunkSize: 8192
